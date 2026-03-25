@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"gitee.com/BirenTechnology/go-brml/brml"
-	"gitee.com/BirenTechnology/k8s-device-plugin/pkg/brgpu"
+	"github.com/Project-HAMi/biren-device-plugin/pkg/brgpu"
 	log "github.com/sirupsen/logrus"
 )
 
