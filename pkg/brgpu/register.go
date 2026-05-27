@@ -58,19 +58,7 @@ func RegisterHAMi(devs []*pluginapi.Device) error {
 		}
 		apiDevices = append(apiDevices, device)
 	}
-	annos := make(map[string]string)
-	annos[RegisterAnnos] = utils.MarshalNodeDevices(apiDevices)
-	annos[HandshakeAnnos] = "Reported_" + time.Now().Format("2026.01.02 15:04:05")
-	node, err := utils.GetNode(*nodeName)
-	if err != nil {
-		return fmt.Errorf("get node %s error: %v", nodeName, err)
-	}
-	err = utils.PatchNodeAnnotations(node, annos)
-	if err != nil {
-		return fmt.Errorf("patch node %s annotations error: %v", nodeName, err)
-	}
-	logrus.Debugf("patch node %s annotations: %v", nodeName, annos)
-	return nil
+	return register(apiDevices)
 }
 
 func RegisterHAMiWithRawDevice(devs DevicesInfoList) error {
@@ -91,6 +79,10 @@ func RegisterHAMiWithRawDevice(devs DevicesInfoList) error {
 			index++
 		}
 	}
+	return register(apiDevices)
+}
+
+func register(apiDevices []*utils.DeviceInfo) error {
 	annos := make(map[string]string)
 	annos[RegisterAnnos] = utils.MarshalNodeDevices(apiDevices)
 	annos[HandshakeAnnos] = "Reported_" + time.Now().Format("2026.01.02 15:04:05")
