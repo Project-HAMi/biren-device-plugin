@@ -72,3 +72,36 @@ func RegisterHAMi(devs []*pluginapi.Device) error {
 	logrus.Debugf("patch node %s annotations: %v", nodeName, annos)
 	return nil
 }
+
+func RegisterHAMiWithRawDevice(devs DevicesInfoList) error {
+	apiDevices := make([]*utils.DeviceInfo, 0, len(devs))
+	// hami currently believes that the index starts from 0 and is continuous.
+	index := 0
+	for i, dev := range devs {
+		for _, ins := range dev.Instances {
+			device := &utils.DeviceInfo{
+				Index:  uint(i),
+				ID:     ins.CardID,
+				Type:   dev.Name,
+				Health: true,
+				Count:  1,
+				Devmem: int32(ins.Memory / 1024 / 1024),
+			}
+			apiDevices = append(apiDevices, device)
+			index++
+		}
+	}
+	annos := make(map[string]string)
+	annos[RegisterAnnos] = utils.MarshalNodeDevices(apiDevices)
+	annos[HandshakeAnnos] = "Reported_" + time.Now().Format("2026.01.02 15:04:05")
+	node, err := utils.GetNode(*nodeName)
+	if err != nil {
+		return fmt.Errorf("get node %s error: %v", nodeName, err)
+	}
+	err = utils.PatchNodeAnnotations(node, annos)
+	if err != nil {
+		return fmt.Errorf("patch node %s annotations error: %v", nodeName, err)
+	}
+	logrus.Debugf("patch node %s annotations: %v", nodeName, annos)
+	return nil
+}

@@ -37,6 +37,7 @@ type DevicesInfo struct {
 	PhysicalNum int
 	Instances   []Instance
 	SVICount    int
+	Name        string
 }
 
 type DevicesInfoList []DevicesInfo
@@ -201,6 +202,12 @@ func DeviceDiscover() (DevicesInfoList, error) {
 		}
 
 		phyUUID = strings.TrimSpace(phyUUID)
+		gpuInfo, err := brml.GetGPUInfo(device)
+		if err != nil {
+			log.Errorf("brml GetGPUInfo %v err: %v", device, err)
+			return nil, err
+		}
+		name := int8ArrayToString(gpuInfo.Name)
 
 		switch sviCount {
 		case 0, 1:
@@ -225,12 +232,14 @@ func DeviceDiscover() (DevicesInfoList, error) {
 					CardID:       cardIDFormat(id),
 				}},
 				SVICount: 1,
+				Name:     name,
 			})
 		case 2, 4:
 			di := DevicesInfo{
 				PhysicalNum: i,
 				Instances:   []Instance{},
 				SVICount:    sviCount,
+				Name:        name,
 			}
 			for j := 0; j < sviCount; j++ {
 				ins, err := brml.GetGPUInstanceByID(device, uint32(j))
@@ -274,4 +283,22 @@ func cardID2Index(s string) (int, error) {
 	}
 	s = strings.ReplaceAll(s, "card_", "")
 	return strconv.Atoi(s)
+}
+
+func int8ArrayToString(arr [96]int8) string {
+	length := 0
+	for i := 0; i < len(arr); i++ {
+		if arr[i] == 0 {
+			break
+		}
+		length++
+	}
+	if length == 0 {
+		return ""
+	}
+	byteSlice := make([]byte, length)
+	for i := 0; i < length; i++ {
+		byteSlice[i] = byte(arr[i])
+	}
+	return string(byteSlice)
 }
