@@ -200,6 +200,7 @@ func (p *Plugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListA
 			} else {
 				p.TopoGraph = tg
 			}
+			RegisterHAMiWithRawDevice(p.BRGPUs)
 		}
 		if p.Runtime == string(RuntimeKata) {
 			for _, v := range p.PFDevices {
@@ -211,9 +212,9 @@ func (p *Plugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListA
 					devs = append(devs, dev)
 				}
 			}
+			RegisterHAMi(devs)
 		}
 		s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
-		RegisterHAMi(devs)
 	}
 	// reload at first start
 	reload()
