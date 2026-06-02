@@ -201,15 +201,10 @@ func vfDeviceDiscover() (PFDeviceInfoList, error) {
 						}
 
 						vfs = append(vfs, VFDeviceInfo{
-							DeviceID:   deviceID,
-							IOMMUGroup: iommuGroup,
-							Addr:       vfAddr,
-							ResourceName: func() string {
-								if vfNum == 1 {
-									return "gpu"
-								}
-								return fmt.Sprintf("1-%d-gpu", vfNum)
-							}(),
+							DeviceID:     deviceID,
+							IOMMUGroup:   iommuGroup,
+							Addr:         vfAddr,
+							ResourceName: "gpu",
 						})
 					}
 					pdl = append(pdl, PFDeviceInfo{

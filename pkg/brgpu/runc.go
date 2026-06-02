@@ -263,7 +263,7 @@ func DeviceDiscover() (DevicesInfoList, error) {
 				di.Instances = append(di.Instances, Instance{
 					UUID:         fmt.Sprintf("%s-instance-%d", phyUUID, j),
 					Memory:       int(mem.Total),
-					ResourceName: fmt.Sprintf("1-%d-gpu", sviCount),
+					ResourceName: "gpu",
 					CardID:       cardIDFormat(id),
 				})
 			}

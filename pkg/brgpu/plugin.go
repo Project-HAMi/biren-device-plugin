@@ -245,6 +245,7 @@ func (p *Plugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListA
 }
 
 func (p *Plugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+	logrus.Info("Allocate")
 	var current *v1.Pod
 	success := false
 	defer func() {
@@ -287,6 +288,7 @@ func (p *Plugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*p
 			utils.PodAllocationFailed(GetNodeName(), current)
 			return nil, err
 		}
+		logrus.Infof("Allocate request %v", devreq)
 		if len(devreq) != len(req.DevicesIDs) {
 			utils.PodAllocationFailed(GetNodeName(), current)
 			return nil, fmt.Errorf("device number not matched")
