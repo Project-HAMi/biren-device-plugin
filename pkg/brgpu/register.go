@@ -65,10 +65,10 @@ func RegisterHAMiWithRawDevice(devs DevicesInfoList) error {
 	apiDevices := make([]*utils.DeviceInfo, 0, len(devs))
 	// hami currently believes that the index starts from 0 and is continuous.
 	index := 0
-	for i, dev := range devs {
+	for _, dev := range devs {
 		for _, ins := range dev.Instances {
 			device := &utils.DeviceInfo{
-				Index:  uint(i),
+				Index:  uint(index),
 				ID:     ins.CardID,
 				Type:   dev.Name,
 				Health: true,

@@ -59,7 +59,7 @@ var (
 func init() {
 	InRequestDevices = make(map[string]string)
 	SupportDevices = make(map[string]string)
-	InRequestDevices[DeviceType] = "hami.io/Biren-devices-allocated"
+	InRequestDevices[DeviceType] = "hami.io/Biren-devices-to-allocate"
 	SupportDevices[DeviceType] = "hami.io/Biren-devices-allocated"
 }
 
