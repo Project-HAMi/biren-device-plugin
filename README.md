@@ -9,9 +9,9 @@ The list of prerequisites for running the Biren device plugin is described below
 
 ## Deployment
 
-### Label the Node with `birentech.com=gpu`
+### Label the Node with `biren=on`
 ```bash
-kubectl label node {biren-node} birentech.com=gpu
+kubectl label node {biren-node} biren=on
 ```
 
 ### Deploy `biren-device-plugin`
